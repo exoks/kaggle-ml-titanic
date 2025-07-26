@@ -5,7 +5,7 @@
 #  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀
 #  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
 #  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2025/07/24 22:12:05 by oezzaou
-#  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2025/07/26 13:39:26 by oezzaou
+#  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2025/07/26 13:46:56 by oezzaou
 #  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀
 #  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀
 #  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪
@@ -16,12 +16,18 @@
 import logging
 import coloredlogs
 
+
 # ===[ getLogger: ]============================================================
-
-
 def getLogger(name: str) -> logging.Logger:
     '''
         It Creats a custom logger based with `name` and return it.
+        logger contains 2 handlers:
+            1. streamHandler: to show logs in the stdout
+                > logs are colored using the external ColoredFormatter module
+                  from ColoredLogs package
+            2. fileHandler:
+                > logs are written in the fil logs/__name__.log,
+                  (logs are not colored)
     '''
     # Creating a Logger Instance
     logger = logging.getLogger(name)
@@ -44,6 +50,7 @@ def getLogger(name: str) -> logging.Logger:
     logger.addHandler(console_handler)
     logger.addHandler(file_handler)
     return logger
+
 
 # NOTE:[ 'Coloredlogs' Module Usage in My logger ]-----------------------------
 # - As you can guys see i used ColoredFromatter module instead of the standard
