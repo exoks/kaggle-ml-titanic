@@ -5,7 +5,7 @@
 #  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀
 #  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
 #  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2025/07/24 22:12:05 by oezzaou
-#  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2025/07/26 13:49:36 by oezzaou
+#  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2025/07/26 16:48:09 by oezzaou
 #  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀
 #  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀
 #  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪
@@ -20,8 +20,8 @@ import coloredlogs
 # ===[ getLogger: ]============================================================
 def getLogger(name: str) -> logging.Logger:
     '''
-    It Creats a custom logger based with `name` and return it.
-    logger contains 2 handlers:
+    It Creats a custom logger based one `name` and return it.
+    - logger contains 2 handlers:
         1. streamHandler: to show logs in the stdout
             > logs are colored using the external ColoredFormatter module
               from ColoredLogs package
@@ -33,6 +33,9 @@ def getLogger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
     # Set logging level to "DEBUG"
     logger.setLevel("DEBUG")
+    # Check if logger has handlers if yes return it, otherwise add handlers
+    if logger.hasHandlers():
+        return logger
     # Creating A file Handler for logger
     file_handler = logging.FileHandler(f"logs/{name}.log", mode='w')
     # Creating a console handler
@@ -44,11 +47,11 @@ def getLogger(name: str) -> logging.Logger:
     formatter = logging.Formatter(
         fmt="[%(levelname)-5s][%(asctime)s] %(message)s")
     # setting a fromatter to both handlers (console_handler & file_handler)
-    file_handler.setFormatter(formatter)
     console_handler.setFormatter(colored_formatter)
+    file_handler.setFormatter(formatter)
     # Adding Both handler to 'logger'
-    logger.addHandler(console_handler)
     logger.addHandler(file_handler)
+    logger.addHandler(console_handler)
     return logger
 
 

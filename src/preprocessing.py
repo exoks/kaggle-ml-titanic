@@ -5,7 +5,7 @@
 #  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀
 #  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
 #  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2025/07/24 13:45:35 by oezzaou
-#  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2025/07/26 12:32:24 by oezzaou
+#  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2025/07/26 16:48:15 by oezzaou
 #  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀
 #  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀
 #  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪
@@ -29,7 +29,7 @@ def remove_duplicates(data: pd.DataFrame) -> pd.DataFrame:
         logger.debug(f"{data.shape[0] - no_dup_data.shape[0]}: rows dropped")
     else:
         logger.debug("No duplicated rows found")
-    return no_dup_data
+    return data
 
 
 # ===[ handle_missing: ]=======================================================
@@ -43,11 +43,29 @@ def fix_inconsistent_formats() -> pd.DataFrame:
     pass
 
 
+# ===[ rename_labels: ]========================================================
+def rename_columns(data: pd.DataFrame) -> pd.DataFrame:
+    logger = getLogger(__name__)
+    logger.info("Renaming columns ...")
+    columns = {
+        "PassengerId": "Id",
+        "Pclass": "Class",
+        "SibSp": "Sibling/spouse",
+        "Parch": "Parent/Child",
+        "Fare": "Price",
+        "Embarked": "Port"
+    }
+    logger.debug(f"Renaming {columns}")
+    return data.rename(columns=columns)
+
+
 # ===[ clean_data: ]===========================================================
 def clean_data(data: pd.DataFrame):
-    # 1. Remove Duplicates
-    no_dup_data = remove_duplicates(data)
-    # 2. Handle Missings
-    no_missings_data = handle_missing(no_dup_data)
-    # 3. Fix Inconsistent formats
-    return no_missings_data
+    # 1. Rename labels/columns (label managment)
+    renamed_data = rename_columns(data)
+    # 2. Remove Duplicates
+    no_dup_data = remove_duplicates(renamed_data)
+    # 3. Handle Missings
+    # no_missings_data = handle_missing(no_dup_data)
+    # 4. Fix Inconsistent formats
+    return no_dup_data
