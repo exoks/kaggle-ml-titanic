@@ -5,7 +5,7 @@
 #  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀
 #  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
 #  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2025/07/24 13:45:35 by oezzaou
-#  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2025/07/26 23:31:08 by oezzaou
+#  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2025/07/29 06:38:11 by oezzaou
 #  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀
 #  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀
 #  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪
@@ -76,11 +76,21 @@ def handle_missing(data: pd.DataFrame) -> pd.DataFrame:
 def fix_inconsistent_formats(data) -> pd.DataFrame:
     logger = getLogger(__name__)
     logger.info("Fixing inconsistent formats in dataset ...")
+    # Fix 'Ticket' column fromats / Caputering the degit part
+    logger.debug("Keeping only numerical part of Ticket ...")
+    data['Ticket'] = data['Ticket'].str.extract(r'(\d+)$').astype(np.int64)
+    # Replacing 1/0 to yes/no
+    logger.debug("Replacing 1/0 by yes/no in 'Survived' column ...")
+    data['Survived'] = data['Survived'].astype(str).replace({
+        "1": "Yes",
+        "0": "No",
+    })
     return data
 
 
 # ===[ clean_data: ]===========================================================
 def clean_data(data: pd.DataFrame):
+    getLogger(__name__).info("-> Cleaning Dataset ...")
     # 1. Rename labels (label managment)
     renamed_data = rename_labels(data)
     # 2. Remove Duplicates
