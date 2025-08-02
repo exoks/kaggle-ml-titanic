@@ -5,7 +5,7 @@
 #  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀
 #  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
 #  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2025/07/24 13:45:35 by oezzaou
-#  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2025/07/29 06:38:11 by oezzaou
+#  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2025/07/30 07:21:29 by oezzaou
 #  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀
 #  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀
 #  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪
@@ -26,15 +26,13 @@ def rename_labels(data: pd.DataFrame) -> pd.DataFrame:
     columns = {
         "PassengerId": "Id",
         "Pclass": "Class",
-        "SibSp": "Sibling/spouse",
+        "SibSp": "Sibling/Spouse",
         "Parch": "Parent/Child",
         "Fare": "Price",
         "Embarked": "Port"
     }
     logger.debug(f"Renaming {columns}")
-    renamed_data = data.rename(columns=columns)
-    logger.debug("Setting Index to 'Id'")
-    return renamed_data.set_index('Id')
+    return data.rename(columns=columns)
 
 
 # ===[ remove_duplicates: ]====================================================
@@ -67,9 +65,10 @@ def handle_missing(data: pd.DataFrame) -> pd.DataFrame:
     # 2|> [Price]: Imputation using backward-filling
     data['Price'] = data['Price'].bfill()
     logger.debug("Price: Back filling the price")
-    # 3|> [Cabin]: 327 is nan from 418 cases, It is good to drop the column
-    logger.debug("Cabin: droping 'Cabin' column")
-    return data.drop(columns='Cabin')
+    # 3|> Droping columns that does not effect the survive of passengers
+    columns = ['Cabin', 'Name', 'Id', 'Port']
+    logger.debug(f"Cabin: droping columns: {columns}")
+    return data.drop(columns=columns)
 
 
 # ===[ fix_inconsistent_formats: ]=============================================
@@ -100,3 +99,7 @@ def clean_data(data: pd.DataFrame):
     # 4. Fix Inconsistent formats
     cleaned_data = fix_inconsistent_formats(no_missing_data)
     return cleaned_data
+
+# ===[ feature_scaling: ]======================================================
+
+# ===[ feature_engineering: ]==================================================
